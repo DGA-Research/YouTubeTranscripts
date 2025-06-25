@@ -4,8 +4,7 @@ import time
 from youtube_transcript_api import (
     YouTubeTranscriptApi,
     TranscriptsDisabled,
-    NoTranscriptFound,
-    TooManyRequests
+    NoTranscriptFound
 )
 
 st.set_page_config(page_title="YouTube Channel Transcripts", layout="wide")
@@ -32,10 +31,6 @@ def get_transcript_text(video_id, retries=3):
             return "\n".join([line['text'] for line in transcript])
         except (TranscriptsDisabled, NoTranscriptFound):
             return None
-        except TooManyRequests:
-            wait_time = 5 * (attempt + 1)
-            st.warning(f"Rate limited. Waiting {wait_time} seconds before retrying (attempt {attempt + 1})...")
-            time.sleep(wait_time)
         except Exception as e:
             return f"[Error fetching transcript: {e}]"
     return None
